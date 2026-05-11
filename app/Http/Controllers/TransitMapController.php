@@ -12,9 +12,7 @@ use Illuminate\View\View;
 
 class TransitMapController extends Controller
 {
-    public function __construct(private readonly StopEtaService $stopEtaService)
-    {
-    }
+    public function __construct(private readonly StopEtaService $stopEtaService) {}
 
     public function index(): View
     {
@@ -73,7 +71,7 @@ class TransitMapController extends Controller
             ->get();
 
         $busesByRoute = Bus::query()
-            ->select(['id', 'route_id', 'current_lat', 'current_lng', 'speed_kmh', 'status', 'last_position_at'])
+            ->select(['id', 'route_id', 'current_lat', 'current_lng', 'speed_kmh', 'status', 'simulation_state', 'last_position_at'])
             ->whereIn('status', ['idle', 'in_service'])
             ->whereNotNull('current_lat')
             ->whereNotNull('current_lng')
@@ -99,7 +97,8 @@ class TransitMapController extends Controller
             $etaByStopId = $this->stopEtaService->estimateForStops(
                 buses: $buses,
                 stops: $stops,
-                densityByStopId: $densityByStopId
+                densityByStopId: $densityByStopId,
+                polyline: $route->polyline ?? []
             );
 
             $stopPayload = $stops->map(function ($stop) use ($densityByStopId, $etaByStopId, $densities): array {

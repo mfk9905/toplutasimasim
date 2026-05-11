@@ -63,7 +63,7 @@
             </div>
             <div>
                 <span>Model</span>
-                <strong>Talep + ETA karar desteği</strong>
+                <strong>Talep + TVS karar desteği</strong>
             </div>
             <div>
                 <span>Veri kaynağı</span>
@@ -74,7 +74,7 @@
         <div class="passenger-panel" id="passengerPanel">
             <span class="eyebrow">Yolcu Bilgilendirme</span>
             <strong>Durak seçiniz</strong>
-            <p>Haritadaki bir durağa tıklandığında yaklaşan otobüs, ETA ve yoğunluk uyarısı burada görünecek.</p>
+            <p>Haritadaki bir durağa tıklandığında yaklaşan otobüs, TVS ve yoğunluk uyarısı burada görünecek.</p>
         </div>
     </main>
 </div>

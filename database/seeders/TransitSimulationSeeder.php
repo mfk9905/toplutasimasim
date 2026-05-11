@@ -3,8 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\Bus;
+use App\Models\BusLog;
 use App\Models\Route;
 use App\Models\Stop;
+use App\Models\StopDensity;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
 
@@ -13,8 +15,8 @@ class TransitSimulationSeeder extends Seeder
     public function run(): void
     {
         Schema::disableForeignKeyConstraints();
-        \App\Models\BusLog::query()->delete();
-        \App\Models\StopDensity::query()->delete();
+        BusLog::query()->delete();
+        StopDensity::query()->delete();
         Bus::query()->delete();
         Stop::query()->delete();
         Route::query()->delete();
@@ -22,83 +24,83 @@ class TransitSimulationSeeder extends Seeder
 
         $routeDefinitions = [
             [
-                'name' => 'Muradiye - Merkez',
+                'name' => 'Muradiye Kampüs - Otogar',
                 'code' => '45M1',
                 'stops' => [
-                    ['name' => 'Muradiye Meydan', 'lat' => 38.659740, 'lng' => 27.340940],
-                    ['name' => 'Muradiye İstasyon', 'lat' => 38.652260, 'lng' => 27.355420],
-                    ['name' => 'Celal Bayar Kampüs', 'lat' => 38.646120, 'lng' => 27.369680],
-                    ['name' => 'Organize Giriş', 'lat' => 38.638840, 'lng' => 27.383660],
-                    ['name' => 'Uncubozköy Kavşak', 'lat' => 38.630780, 'lng' => 27.399940],
-                    ['name' => 'Manisa Park', 'lat' => 38.624900, 'lng' => 27.414180],
+                    ['name' => 'Muradiye Son Durak', 'lat' => 38.658900, 'lng' => 27.341800],
+                    ['name' => 'Muradiye İstasyon', 'lat' => 38.653600, 'lng' => 27.354600],
+                    ['name' => 'CBÜ Muradiye Kampüsü', 'lat' => 38.648400, 'lng' => 27.368000],
+                    ['name' => 'OSB Kavşağı', 'lat' => 38.641300, 'lng' => 27.384800],
+                    ['name' => 'Uncubozköy Meydan', 'lat' => 38.633700, 'lng' => 27.400300],
+                    ['name' => 'Magnesia AVM', 'lat' => 38.626600, 'lng' => 27.414300],
+                    ['name' => 'Manisa Gar', 'lat' => 38.620600, 'lng' => 27.421800],
                     ['name' => 'Cumhuriyet Meydanı', 'lat' => 38.619099, 'lng' => 27.428921],
-                    ['name' => 'Valilik', 'lat' => 38.615400, 'lng' => 27.440300],
-                    ['name' => 'Dogum Evi', 'lat' => 38.610950, 'lng' => 27.452500],
-                    ['name' => 'Otogar', 'lat' => 38.606280, 'lng' => 27.466080],
+                    ['name' => 'Doğum ve Çocuk Hastanesi', 'lat' => 38.611800, 'lng' => 27.452000],
+                    ['name' => 'Şehirlerarası Otogar', 'lat' => 38.605400, 'lng' => 27.468200],
                 ],
             ],
             [
                 'name' => 'Horozköy - Laleli',
                 'code' => '45M2',
                 'stops' => [
-                    ['name' => 'Horozköy Meydan', 'lat' => 38.640120, 'lng' => 27.476640],
-                    ['name' => 'Horozköy Sağlık', 'lat' => 38.634260, 'lng' => 27.464820],
-                    ['name' => 'Hafsa Sultan', 'lat' => 38.628200, 'lng' => 27.452780],
-                    ['name' => 'Mimar Sinan Bulvari', 'lat' => 38.623560, 'lng' => 27.442880],
+                    ['name' => 'Horozköy Son Durak', 'lat' => 38.642800, 'lng' => 27.482000],
+                    ['name' => 'Horozköy Meydan', 'lat' => 38.638900, 'lng' => 27.473000],
+                    ['name' => 'Hafsa Sultan Mahallesi', 'lat' => 38.632200, 'lng' => 27.458600],
+                    ['name' => 'Devlet Hastanesi', 'lat' => 38.625100, 'lng' => 27.446700],
+                    ['name' => 'Mimar Sinan Bulvarı', 'lat' => 38.620900, 'lng' => 27.438200],
                     ['name' => 'Cumhuriyet Meydanı', 'lat' => 38.619099, 'lng' => 27.428921],
-                    ['name' => 'Kültür Sitesi', 'lat' => 38.613920, 'lng' => 27.418540],
-                    ['name' => 'Laleli Kavşak', 'lat' => 38.608260, 'lng' => 27.407680],
-                    ['name' => 'Laleli Merkez', 'lat' => 38.602780, 'lng' => 27.398240],
-                    ['name' => 'Mesir Mahallesi', 'lat' => 38.596880, 'lng' => 27.388360],
-                    ['name' => 'Yeni Mahalle', 'lat' => 38.591760, 'lng' => 27.378880],
+                    ['name' => 'Kültür Sitesi', 'lat' => 38.614000, 'lng' => 27.419200],
+                    ['name' => 'Laleli Kavşağı', 'lat' => 38.608300, 'lng' => 27.407400],
+                    ['name' => 'Laleli Merkez', 'lat' => 38.602800, 'lng' => 27.397800],
+                    ['name' => 'Mesir Mahallesi', 'lat' => 38.596200, 'lng' => 27.388900],
                 ],
             ],
             [
-                'name' => 'Keçiliköy - Karaköy',
+                'name' => 'Keçiliköy - Karaköy - Alaybey',
                 'code' => '45M3',
                 'stops' => [
-                    ['name' => 'Keçiliköy', 'lat' => 38.584200, 'lng' => 27.449500],
-                    ['name' => 'Keçiliköy Yol Ayrımı', 'lat' => 38.592320, 'lng' => 27.444120],
-                    ['name' => 'Spil Kavşak', 'lat' => 38.601180, 'lng' => 27.438460],
-                    ['name' => 'Ulupark', 'lat' => 38.610060, 'lng' => 27.433520],
+                    ['name' => 'Keçiliköy Son Durak', 'lat' => 38.584700, 'lng' => 27.450000],
+                    ['name' => 'Keçiliköy Merkez', 'lat' => 38.590400, 'lng' => 27.446700],
+                    ['name' => 'Spil Kavşağı', 'lat' => 38.599200, 'lng' => 27.440000],
+                    ['name' => 'Ulupark', 'lat' => 38.610000, 'lng' => 27.433500],
                     ['name' => 'Cumhuriyet Meydanı', 'lat' => 38.619099, 'lng' => 27.428921],
-                    ['name' => 'Sultan Cami', 'lat' => 38.623880, 'lng' => 27.423220],
-                    ['name' => 'Karaköy Pazaryeri', 'lat' => 38.629940, 'lng' => 27.417260],
-                    ['name' => 'Karaköy Merkez', 'lat' => 38.636120, 'lng' => 27.411240],
-                    ['name' => 'Karaköy Lise', 'lat' => 38.642380, 'lng' => 27.405300],
-                    ['name' => 'Karaköy Son Durak', 'lat' => 38.648540, 'lng' => 27.399120],
+                    ['name' => 'Sultan Camii', 'lat' => 38.623300, 'lng' => 27.423900],
+                    ['name' => 'Karaköy Pazaryeri', 'lat' => 38.628700, 'lng' => 27.417400],
+                    ['name' => 'Karaköy Merkez', 'lat' => 38.634800, 'lng' => 27.411000],
+                    ['name' => 'Alaybey Camii', 'lat' => 38.641200, 'lng' => 27.405500],
+                    ['name' => 'Alaybey Son Durak', 'lat' => 38.647000, 'lng' => 27.399800],
                 ],
             ],
             [
-                'name' => 'Uncubozköy - Hafsa Sultan',
+                'name' => 'Uncubozköy - Merkez - Hafsa Sultan',
                 'code' => '45M4',
                 'stops' => [
-                    ['name' => 'Uncubozköy Meydan', 'lat' => 38.633500, 'lng' => 27.391100],
-                    ['name' => 'Merkez Efendi', 'lat' => 38.629220, 'lng' => 27.400860],
-                    ['name' => 'Manisa Park', 'lat' => 38.625080, 'lng' => 27.411360],
-                    ['name' => 'Gar', 'lat' => 38.621260, 'lng' => 27.420620],
+                    ['name' => 'Uncubozköy Son Durak', 'lat' => 38.636800, 'lng' => 27.389000],
+                    ['name' => 'Merkez Efendi', 'lat' => 38.631800, 'lng' => 27.398600],
+                    ['name' => 'Manisa Park', 'lat' => 38.626100, 'lng' => 27.411200],
+                    ['name' => 'Gar Meydanı', 'lat' => 38.620400, 'lng' => 27.421800],
                     ['name' => 'Cumhuriyet Meydanı', 'lat' => 38.619099, 'lng' => 27.428921],
-                    ['name' => 'Devlet Hastanesi', 'lat' => 38.621820, 'lng' => 27.439260],
-                    ['name' => 'Hafsa Sultan Bulvari', 'lat' => 38.625600, 'lng' => 27.449860],
-                    ['name' => 'Hafsa Sultan Mahallesi', 'lat' => 38.630240, 'lng' => 27.460360],
-                    ['name' => 'Horozköy Giriş', 'lat' => 38.635480, 'lng' => 27.470700],
-                    ['name' => 'Horozköy Aktarma', 'lat' => 38.641100, 'lng' => 27.481200],
+                    ['name' => 'Valilik', 'lat' => 38.616000, 'lng' => 27.437800],
+                    ['name' => 'Mimar Sinan', 'lat' => 38.620700, 'lng' => 27.443900],
+                    ['name' => 'Devlet Hastanesi', 'lat' => 38.624800, 'lng' => 27.449900],
+                    ['name' => 'Hafsa Sultan Bulvarı', 'lat' => 38.629800, 'lng' => 27.459500],
+                    ['name' => 'Horozköy Aktarma', 'lat' => 38.638700, 'lng' => 27.477000],
                 ],
             ],
             [
-                'name' => 'OSB - Otogar',
+                'name' => 'OSB - Merkez - Otogar',
                 'code' => '45M5',
                 'stops' => [
-                    ['name' => 'OSB Ana Giriş', 'lat' => 38.676200, 'lng' => 27.389900],
-                    ['name' => 'OSB 2 Cadde', 'lat' => 38.664880, 'lng' => 27.397320],
-                    ['name' => 'Kenan Evren Sanayi', 'lat' => 38.654200, 'lng' => 27.405100],
-                    ['name' => 'Küçük Sanayi', 'lat' => 38.643360, 'lng' => 27.412860],
-                    ['name' => 'Uncubozköy Kavşak', 'lat' => 38.632340, 'lng' => 27.420220],
+                    ['name' => 'OSB Ana Kapı', 'lat' => 38.675500, 'lng' => 27.390800],
+                    ['name' => 'OSB 2. Kısım', 'lat' => 38.666800, 'lng' => 27.397600],
+                    ['name' => 'Kenan Evren Sanayi', 'lat' => 38.654000, 'lng' => 27.405000],
+                    ['name' => 'Küçük Sanayi', 'lat' => 38.643000, 'lng' => 27.413000],
+                    ['name' => 'Uncubozköy Kavşağı', 'lat' => 38.632000, 'lng' => 27.420000],
+                    ['name' => 'Manisa Gar', 'lat' => 38.620600, 'lng' => 27.421900],
                     ['name' => 'Cumhuriyet Meydanı', 'lat' => 38.619099, 'lng' => 27.428921],
-                    ['name' => 'Mimar Sinan', 'lat' => 38.615120, 'lng' => 27.438980],
-                    ['name' => 'Turgut Özal', 'lat' => 38.611060, 'lng' => 27.449620],
-                    ['name' => 'Dogum Evi', 'lat' => 38.607200, 'lng' => 27.459340],
-                    ['name' => 'Otogar', 'lat' => 38.603300, 'lng' => 27.469200],
+                    ['name' => 'Turgut Özal Mahallesi', 'lat' => 38.613800, 'lng' => 27.444300],
+                    ['name' => 'Doğum ve Çocuk Hastanesi', 'lat' => 38.608000, 'lng' => 27.456200],
+                    ['name' => 'Şehirlerarası Otogar', 'lat' => 38.603300, 'lng' => 27.469200],
                 ],
             ],
         ];
@@ -174,7 +176,11 @@ class TransitSimulationSeeder extends Seeder
             }
         }
 
-        $polyline[] = $stops[$stopCount - 1];
+        $lastStop = $stops[$stopCount - 1];
+        $polyline[] = [
+            'lat' => $lastStop['lat'],
+            'lng' => $lastStop['lng'],
+        ];
 
         return $polyline;
     }

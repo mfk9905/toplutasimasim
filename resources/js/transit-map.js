@@ -20,6 +20,8 @@ if (mapContainer) {
     const subscriptions = new Set();
     const routeLayers = new Map();
     const stopLayers = new Map();
+    let etaRefreshTimer = null;
+    let selectedStop = null;
 
     const busList = document.getElementById('busList');
     const routeList = document.getElementById('routeList');
@@ -62,7 +64,7 @@ if (mapContainer) {
     }
 
     function averageEtaLabel(seconds) {
-        return seconds === null || seconds === undefined ? 'ETA yok' : etaLabel(seconds);
+        return seconds === null || seconds === undefined ? 'TVS yok' : etaLabel(seconds);
     }
 
     function densityColor(score) {
@@ -74,12 +76,12 @@ if (mapContainer) {
 
     function lastSeenLabel(value) {
         if (!value) {
-            return 'simdi';
+            return 'şimdi';
         }
 
         const date = new Date(value);
         if (Number.isNaN(date.getTime())) {
-            return 'simdi';
+            return 'şimdi';
         }
 
         return date.toLocaleTimeString('tr-TR', {
@@ -150,10 +152,10 @@ if (mapContainer) {
             <div class="action-item">
                 <span class="route-swatch" style="background: ${route.color}"></span>
                 <div>
-                    <strong>${route.code} | ${route.analytics?.operation_action ?? 'Izleniyor'}</strong>
+                    <strong>${route.code} | ${route.analytics?.operation_action ?? 'İzleniyor'}</strong>
                     <small>
                         Ort. yoğunluk ${Number(route.analytics?.average_density ?? 0).toFixed(0)}%
-                        | Ort. ETA ${averageEtaLabel(route.analytics?.average_eta_seconds)}
+                        | Ort. TVS ${averageEtaLabel(route.analytics?.average_eta_seconds)}
                         | ${route.analytics?.feedback_summary ?? 'Geri bildirim yok'}
                     </small>
                 </div>
@@ -166,10 +168,15 @@ if (mapContainer) {
             return;
         }
 
+        selectedStop = {
+            routeId: Number(route.id),
+            stopId: Number(stop.id),
+        };
+
         passengerPanel.innerHTML = `
             <span class="eyebrow">Yolcu Bilgilendirme</span>
             <strong>${stop.name}</strong>
-            <p>${route.code} hattı | ETA: ${etaLabel(stop.eta_seconds)} | Yoğunluk: ${stop.density_level} (${Number(stop.density_score).toFixed(0)}%)</p>
+            <p>${route.code} hattı | TVS: ${etaLabel(stop.eta_seconds)} | Yoğunluk: ${stop.density_level} (${Number(stop.density_score).toFixed(0)}%)</p>
             <small>${Number(stop.passenger_estimate || 0)} tahmini yolcu. ${stop.density_score >= 70 ? 'Alternatif durak veya sonraki sefer önerilir.' : 'Durak kullanımı normal seviyede.'}</small>
         `;
     }
@@ -205,7 +212,7 @@ if (mapContainer) {
         }
     }
 
-    function renderLayers(routes) {
+    function renderLayers(routes, shouldFitBounds = false) {
         routeLayers.forEach((layer) => map.removeLayer(layer));
         stopLayers.forEach((layer) => map.removeLayer(layer));
         routeLayers.clear();
@@ -261,7 +268,7 @@ if (mapContainer) {
                     `${route.code} | Durak ${stop.sequence}<br>` +
                     `Yoğunluk: ${score.toFixed(0)} / 100 (${stop.density_level})<br>` +
                     `Tahmini yolcu: ${Number(stop.passenger_estimate || 0)}<br>` +
-                    `ETA: ${etaLabel(stop.eta_seconds)}<br>` +
+                    `TVS: ${etaLabel(stop.eta_seconds)}<br>` +
                     `Yolcu uyarısı: ${score >= 70 ? 'Yoğun durak' : 'Normal kullanım'}`,
                 );
                 circle.on('click', () => renderPassengerPanel(route, stop));
@@ -271,7 +278,7 @@ if (mapContainer) {
             });
         });
 
-        if (bounds.isValid()) {
+        if (shouldFitBounds && bounds.isValid()) {
             map.fitBounds(bounds.pad(0.12), {
                 maxZoom: 14,
                 animate: true,
@@ -281,7 +288,21 @@ if (mapContainer) {
         renderRouteList(routes);
         renderActionList(routes);
         renderStats(routes);
+        refreshSelectedStop(routes);
         setTimeout(() => map.invalidateSize(), 100);
+    }
+
+    function refreshSelectedStop(routes) {
+        if (!selectedStop) {
+            return;
+        }
+
+        const route = routes.find((entry) => Number(entry.id) === selectedStop.routeId);
+        const stop = route?.stops?.find((entry) => Number(entry.id) === selectedStop.stopId);
+
+        if (route && stop) {
+            renderPassengerPanel(route, stop);
+        }
     }
 
     function animateMarker(marker, from, to, durationMs = 1150) {
@@ -350,6 +371,18 @@ if (mapContainer) {
         }
 
         renderBusList();
+        scheduleEtaRefresh();
+    }
+
+    function scheduleEtaRefresh() {
+        if (etaRefreshTimer !== null) {
+            return;
+        }
+
+        etaRefreshTimer = window.setTimeout(() => {
+            etaRefreshTimer = null;
+            refreshLayers().catch(() => {});
+        }, 2500);
     }
 
     function subscribeRoute(routeId) {
@@ -386,7 +419,7 @@ if (mapContainer) {
         const routes = layerData.routes ?? [];
         const buses = bootstrapData.buses ?? [];
 
-        renderLayers(routes);
+        renderLayers(routes, true);
         routes.forEach((route) => subscribeRoute(route.id));
         buses.forEach((bus) => upsertBus(bus));
 
@@ -405,5 +438,5 @@ if (mapContainer) {
 
     setInterval(() => {
         refreshLayers().catch(() => {});
-    }, 30000);
+    }, 10000);
 }

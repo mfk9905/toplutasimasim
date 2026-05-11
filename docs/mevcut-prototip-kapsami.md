@@ -8,7 +8,7 @@ Bu doküman, mevcut sürümün kapsamını ve sınırlarını özetler.
 - Leaflet tabanlı canlı harita
 - Laravel Reverb üzerinden gerçek zamanlı konum yayını
 - Durak yoğunluğu ve yolcu tahmini gösterimi
-- ETA (tahmini varış süresi) hesaplaması
+- TVS (tahmini varış süresi) hesaplaması
 - Hat bazlı operasyon önerisi üretimi
 
 ## Kapsam Dışında Olanlar
@@ -22,6 +22,6 @@ Bu doküman, mevcut sürümün kapsamını ve sınırlarını özetler.
 
 Uygulama, gerçek veri kaynakları sonradan eklenecek şekilde katmanlı tasarlanmıştır:
 - Veri üretimi/simülasyon
-- Domain servisleri (simülasyon + ETA)
+- Domain servisleri (simülasyon + TVS)
 - API ve event katmanı
 - Harita tabanlı kullanıcı arayüzü

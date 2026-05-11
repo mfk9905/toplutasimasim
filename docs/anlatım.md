@@ -27,20 +27,20 @@ Harita üstünde:
 - Hat çizgileri farklı renklerle gösteriliyor.
 - Duraklar yoğunluğa göre renkleniyor.
 - Otobüs ikonları canlı olarak hareket ediyor.
-- Bir durağa tıklanınca yolcu bilgilendirme paneli açılıyor: ETA, yoğunluk ve tahmini yolcu sayısı gösteriliyor.
+- Bir durağa tıklanınca yolcu bilgilendirme paneli açılıyor: TVS, yoğunluk ve tahmini yolcu sayısı gösteriliyor.
 
 Bu ekranın amacı teknik detay göstermek değil, "ne oluyor" sorusuna 5 saniyede cevap vermek.
 
-## 3) Verinin Hikayesi - Simülasyon, ETA ve Canlı Yayın (2 dakika)
+## 3) Verinin Hikayesi - Simülasyon, TVS ve Canlı Yayın (2 dakika)
 
 Bu prototipte veri akışı şöyle:
 1. Önce seed ile örnek şehir verisi oluşturuluyor: 5 hat, 50 durak, 10 otobüs.
 2. `simulate:buses` komutu sürekli çalışıp otobüs konumlarını güncelliyor.
 3. Her güncellemede bir event yayınlanıyor: `BusPositionUpdated`.
 4. Frontend, route kanalından bu event'i dinleyip marker konumunu animasyonla güncelliyor.
-5. Ek olarak her 30 saniyede bir `layers` API çağrısıyla durak yoğunluğu, ETA ve operasyon önerileri tazeleniyor.
+5. Canlı konum eventi geldikten kısa süre sonra ve ayrıca 10 saniyede bir `layers` API çağrısıyla durak yoğunluğu, TVS ve operasyon önerileri tazeleniyor.
 
-ETA hesabı tamamen anlaşılır bir formüle dayanıyor:
+TVS hesabı tamamen anlaşılır bir formüle dayanıyor:
 - Mesafe
 - Hız
 - Duraklar arası ortalama süre
@@ -56,7 +56,7 @@ Bu bölümde "hangi kod nerede" sorusunu hızlıca kapatıyoruz.
 - `routes/web.php`
   - `/` -> ana harita sayfası
   - `/api/live-map/bootstrap` -> açılışta otobüsleri getirir
-  - `/api/live-map/layers` -> hat, durak, ETA, yoğunluk verisini getirir
+  - `/api/live-map/layers` -> hat, durak, TVS, yoğunluk verisini getirir
 - `routes/channels.php`
   - `routes.{routeId}` -> canlı yayın kanalı
 
@@ -68,9 +68,9 @@ Bu bölümde "hangi kod nerede" sorusunu hızlıca kapatıyoruz.
 - `app/Domain/Transit/Services/Simulation/RouteInterpolator.php`
   - polyline üstünde yeni konumu matematiksel olarak hesaplar
 - `app/Domain/Transit/Services/Eta/StopEtaService.php`
-  - her durak için en yakın/uygun ETA'yı bulur
+  - her durak için en yakın/uygun TVS'yi bulur
 - `app/Domain/Transit/Services/Eta/EtaEstimator.php`
-  - ETA formülünü uygular
+  - TVS formülünü uygular
 - `app/Events/BusPositionUpdated.php`
   - WebSocket ile frontend'e anlık veri taşır
 
@@ -126,7 +126,6 @@ Sınırlar (dürüstçe söylememiz gerekenler):
 Yani bu sistem, "canlı prototip + karar destek demonstrasyonu" seviyesinde.
 
 ## 7) Kapanış (30 saniye)
-
 Toparlarsak:
 - Bu prototip, toplu taşımada canlı görünürlük sağlar.
 - Yolcu bilgisi ve operasyon önerisini aynı ekranda birleştirir.

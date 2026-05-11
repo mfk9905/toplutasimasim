@@ -7,7 +7,7 @@ Bu proje, gerçek GPS ve saha yoğunluk verisi olmadan geliştirilen simülasyon
 - 5 hat ve toplam 50 durak içeren Manisa toplu taşıma simülasyonu
 - Harita üzerinde canlı otobüs konumu takibi
 - Laravel Reverb ile gerçek zamanlı WebSocket yayını
-- Durak yoğunluğu, tahmini yolcu sayısı ve ETA gösterimi
+- Durak yoğunluğu, tahmini yolcu sayısı ve TVS gösterimi
 - Kural tabanlı operasyon önerileri
 - Yolcu bilgilendirme paneli
 
